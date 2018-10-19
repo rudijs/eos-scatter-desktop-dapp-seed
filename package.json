@@ -1,0 +1,31 @@
+{
+  "name": "eos-scatter-desktop-dapp-seed",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "mobx": "^5.5.1",
+    "mobx-react": "^5.3.4",
+    "mobx-state-tree": "^3.7.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-scripts": "2.0.5",
+    "scatterjs-core": "^2.3.6",
+    "scatterjs-plugin-eosjs2": "^1.1.5",
+    "xstate": "^3.3.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
