@@ -1,6 +1,22 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
-export default class BlockchainInfo extends Component {
+const styles = theme => ({
+  root: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    overflow: "auto"
+  },
+  info: {
+    fontWeight: "bold"
+  }
+});
+
+class BlockchainInfo extends Component {
   state = {
     info: {}
   };
@@ -13,20 +29,28 @@ export default class BlockchainInfo extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     const info = Object.keys(this.state.info).map((key, index) => {
       return (
-        <p key={index}>
-          <span style={{ fontWeight: "bold" }}>{key}</span>:
-          {this.state.info[key]}
-        </p>
+        <Typography key={index}>
+          <span className={classes.info}>{key}</span>: {this.state.info[key]}
+        </Typography>
       );
     });
 
     return (
       <div>
-        <h1>EOS Blockchain Info</h1>
-        {info}
+        <Paper className={classes.root} elevation={1}>
+          <Typography variant="h4">EOS Blockchain Info</Typography>
+          {info}
+        </Paper>
       </div>
     );
   }
 }
+
+BlockchainInfo.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(BlockchainInfo);
