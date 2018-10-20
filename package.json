@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.2.2",
+    "@material-ui/icons": "^3.0.1",
     "mobx": "^5.5.1",
     "mobx-react": "^5.3.4",
     "mobx-state-tree": "^3.7.0",
@@ -11,6 +13,7 @@
     "react-scripts": "2.0.5",
     "scatterjs-core": "^2.3.6",
     "scatterjs-plugin-eosjs2": "^1.1.5",
+    "typeface-roboto": "0.0.54",
     "xstate": "^3.3.3"
   },
   "scripts": {

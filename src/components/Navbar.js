@@ -1,28 +1,73 @@
 import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  button: {
+    margin: theme.spacing.unit
+  }
+});
 
 const LogInOut = props => {
   if (!props.isAuthenticated) {
-    return <button onClick={props.login}>Login</button>;
+    // return <button onClick={props.login}>Login</button>;
+    return (
+      <Button
+        variant="contained"
+        size="large"
+        className={props.classes.button}
+        onClick={props.login}
+      >
+        Login
+      </Button>
+    );
   }
 
-  return <button onClick={props.logout}>Logout</button>;
+  // return <button onClick={props.logout}>Logout</button>;
+  return (
+    <Button
+      variant="contained"
+      size="large"
+      className={props.classes.button}
+      onClick={props.logout}
+    >
+      Logout
+    </Button>
+  );
 };
 
 const Navbar = inject("identityStateTree", "auth")(
-  observer(({ identityStateTree, auth }) => {
+  observer(({ identityStateTree, auth, classes }) => {
     const { name, state, isAuthenticated } = identityStateTree;
     const { login, logout } = auth;
+
     return (
-      <div>
-        <p style={{ display: "inline-block", marginRight: "0.5rem" }}>{name}</p>
-        <LogInOut
-          state={state}
-          isAuthenticated={isAuthenticated}
-          login={login}
-          logout={logout}
-        />
-        <p>{state}</p>
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+              EOS Dapp Seed - {name} ({state})
+            </Typography>
+            <LogInOut
+              state={state}
+              isAuthenticated={isAuthenticated}
+              login={login}
+              logout={logout}
+              classes={classes}
+            />
+          </Toolbar>
+        </AppBar>
       </div>
     );
   })
@@ -59,4 +104,8 @@ const Navbar = inject("identityStateTree", "auth")(
 //   )
 // );
 
-export default Navbar;
+Navbar.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(Navbar);
