@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PropTypes from "prop-types";
 import "./App.css";
 
@@ -7,8 +8,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import theme from "./components/layout/theme";
 
-import BlockchainInfo from "./components/BlockchainInfo";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/layout/Navbar";
+import Index from "./components/layout/Index";
 
 class App extends Component {
   componentDidMount() {
@@ -20,11 +21,18 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <div>
-          <Navbar />
-          <BlockchainInfo />
-        </div>
+        <Router>
+          <React.Fragment>
+            <CssBaseline />
+            <div>
+              <Navbar />
+              <Switch>
+                <Route exact path="/" component={Index} />
+                {/* <Route exact path="/lyrics/track/:id" component={Lyrics} /> */}
+              </Switch>
+            </div>
+          </React.Fragment>
+        </Router>
       </MuiThemeProvider>
     );
   }

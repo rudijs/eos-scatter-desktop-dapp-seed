@@ -21,7 +21,6 @@ const styles = theme => ({
 
 const LogInOut = props => {
   if (!props.isAuthenticated) {
-    // return <button onClick={props.login}>Login</button>;
     return (
       <Button
         variant="contained"
@@ -34,7 +33,6 @@ const LogInOut = props => {
     );
   }
 
-  // return <button onClick={props.logout}>Logout</button>;
   return (
     <Button
       variant="contained"

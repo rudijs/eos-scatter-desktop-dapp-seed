@@ -10,6 +10,7 @@
     "mobx-state-tree": "^3.7.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
     "scatterjs-core": "^2.3.6",
     "scatterjs-plugin-eosjs2": "^1.1.5",
