@@ -9,7 +9,7 @@ export default createMuiTheme({
     // secondary: pink
   },
   typography: {
-    useNextVariants: true
+    useNextVariants: true // typography v2
     // title: { color: "red" }
   }
 });
