@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import { inject, observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { inject, observer } from "mobx-react";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,6 +18,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
+
+import history from "../../history";
 
 const styles = theme => ({
   root: {
@@ -113,17 +116,23 @@ const Navbar = inject("identityStateTree", "auth")(
         const sideList = (
           <div className={classes.list}>
             <List component="nav">
-              <ListItem button>
+              <ListItem button onClick={() => history.push("/")}>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Inbox" />
+                <ListItemText primary="Home" />
               </ListItem>
-              <ListItem button>
+
+              <ListItem
+                button
+                onClick={() => {
+                  history.push("/about");
+                }}
+              >
                 <ListItemIcon>
                   <DraftsIcon />
                 </ListItemIcon>
-                <ListItemText primary="Drafts" />
+                <ListItemText primary="About Us" />
               </ListItem>
             </List>
             <Divider />

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import { Link } from "react-router-dom";
+
 
 const styles = theme => ({
   root: {
@@ -43,6 +45,7 @@ class BlockchainInfo extends Component {
         <Paper className={classes.root} elevation={1}>
           <Typography variant="h4">EOS Blockchain Info</Typography>
           {info}
+          <Link to="/about">About Us</Link>
         </Paper>
       </div>
     );
