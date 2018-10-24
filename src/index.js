@@ -12,19 +12,25 @@ import ScatterEOS from "scatterjs-plugin-eosjs2";
 import { Identity } from "./models/Identity";
 ScatterJS.plugins(new ScatterEOS());
 
-const identityStateTree = Identity.create({
+const identityState = Identity.create({
   name: "Get Scatter",
   state: "initial"
 });
 
+// Keep one persistent reference to the ScatterJS object through-out your application's lifecycle.
+// The best practice is to keep a reference to ScatterJS within your state controller, like MobX, Redux etc.
+// Here we'll use volatile state in mobx-state-tree in such a way that the .scatter computed property
+// is not observable, no patch/diff, no getSnapshot
+identityState.setScatter(ScatterJS.scatter)
+
 const auth = new Auth({
   config,
-  identityStateTree,
-  scatter: ScatterJS.scatter
+  identityState,
+  scatter: identityState.scatter
 });
 
 ReactDOM.render(
-  <Provider auth={auth} identityStateTree={identityStateTree}>
+  <Provider auth={auth} identityState={identityState}>
     <App auth={auth} />
   </Provider>,
   document.getElementById("root")

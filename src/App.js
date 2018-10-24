@@ -16,8 +16,8 @@ import About from "./components/About";
 
 class App extends Component {
   componentDidMount() {
-    // When the app loads, make a call to Scatter and see if we have an identity authorized
-    // If we do, the mobx state tree will be updated.
+    // When the app loads, make a call to Scatter and see if we already have an identity authorized
+    // If we do, globally available identityState will be updated.
     this.props.auth.identity();
   }
 

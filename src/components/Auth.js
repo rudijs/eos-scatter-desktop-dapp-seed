@@ -6,9 +6,11 @@ const Auth = class Auth {
     window.scatter = null;
 
     this.config = options.config;
-    this.identityStateTree = options.identityStateTree;
+    this.identityState = options.identityState;
     this.scatter = options.scatter;
   }
+
+  //todo: states enum
 
   connect() {
     return this.scatter
@@ -17,7 +19,7 @@ const Auth = class Auth {
         // If the user does not have Scatter or it is Locked or Closed
         // reset the application state
         if (!connected || !this.scatter.identity) {
-          this.identityStateTree.setSession(null);
+          this.identityState.setSession(null);
         }
 
         // If the user does not have Scatter or it is Locked or Closed
@@ -55,8 +57,8 @@ const Auth = class Auth {
       .catch(err => {
         // tell the user we cannot connect to their wallet
         console.log("scatter.connect()", err);
-        this.identityStateTree.setSession(null);
-        this.identityStateTree.setState("initial");
+        this.identityState.setSession(null);
+        this.identityState.setState("initial");
         return {
           type: "connection_rejected",
           code: 500,
@@ -71,34 +73,33 @@ const Auth = class Auth {
    * Similar to a isLoggedIn() or isAuthenticated() method
    */
   identity() {
-    this.identityStateTree.setState("loading");
+    this.identityState.setState("loading");
     return this.connect().then(res => {
-      console.log(101, res);
       if (res.identity) {
-        this.identityStateTree.setSession(res.identity);
-        this.identityStateTree.setState("loaded");
+        this.identityState.setSession(res.identity);
+        this.identityState.setState("loaded");
       } else if (res.isError) {
-        this.identityStateTree.setState("error");
+        this.identityState.setState("error");
       } else {
-        this.identityStateTree.setState("initial");
+        this.identityState.setState("initial");
       }
       return res;
     });
   }
 
   logout = () => {
-    this.identityStateTree.setState("loading");
+    this.identityState.setState("loading");
     return this.connect().then(connected => {
       // update UI we cannot auto logout from this app without a connection to Scatter wallet
       if (connected.isError) {
-        this.identityStateTree.setState("error");
+        this.identityState.setState("error");
         return connected;
       }
 
       if (this.scatter.identity) {
         this.scatter.forgetIdentity();
-        this.identityStateTree.setSession(null);
-        this.identityStateTree.setState("initial");
+        this.identityState.setSession(null);
+        this.identityState.setState("initial");
       }
 
       return {
@@ -111,17 +112,17 @@ const Auth = class Auth {
   };
 
   login = () => {
-    this.identityStateTree.setState("loading");
+    this.identityState.setState("loading");
     // First we need to connect to the user's Scatter.
     return this.connect().then(connected => {
       if (connected.isError) {
-        this.identityStateTree.setState("error");
+        this.identityState.setState("error");
         return connected;
       }
 
       // we can connect to Scatter and we have an identity already
       if (!connected.isError && connected.identity) {
-        this.identityStateTree.setState("loaded");
+        this.identityState.setState("loaded");
         return { code: 200, message: "OK", identity: connected.identity };
       }
 
@@ -135,14 +136,14 @@ const Auth = class Auth {
       return this.scatter
         .getIdentity(requiredFields)
         .then(identity => {
-          this.identityStateTree.setSession(identity);
-          this.identityStateTree.setState("loaded");
+          this.identityState.setSession(identity);
+          this.identityState.setState("loaded");
           return { code: 200, message: "OK", identity };
         })
         .catch(err => {
           // user rejected Scatter pop up identity request
           console.log(err);
-          this.identityStateTree.setState("error");
+          this.identityState.setState("error");
           return err;
         });
     });

@@ -8,7 +8,7 @@ import Auth from "./components/Auth";
 import config from "./config";
 
 // real mobx state tree
-const identityStateTree = Identity.create({
+const identityState = Identity.create({
   name: "Guest",
   state: "initial"
 });
@@ -20,12 +20,12 @@ const scatter = {
   }
 };
 
-const auth = new Auth({ config, identityStateTree, scatter });
+const auth = new Auth({ config, identityState, scatter });
 
 it("renders without crashing", () => {
   const div = document.createElement("div");
   ReactDOM.render(
-    <Provider identityStateTree={identityStateTree} auth={auth}>
+    <Provider identityState={identityState} auth={auth}>
       <App auth={auth} />
     </Provider>,
     div

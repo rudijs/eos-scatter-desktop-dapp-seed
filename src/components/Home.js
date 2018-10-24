@@ -2,7 +2,11 @@ import React from "react";
 import BlockchainInfo from "./BlockchainInfo";
 
 function Home() {
-  return <BlockchainInfo />;
+  return (
+    <main>
+      <BlockchainInfo />
+    </main>
+  );
 }
 
 export default Home;

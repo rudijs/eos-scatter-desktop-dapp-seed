@@ -66,9 +66,9 @@ const LogInOut = props => {
   );
 };
 
-// const Navbar = inject("identityStateTree", "auth")(
-//   observer(({ identityStateTree, auth, classes }) => {
-//     const { name, state, isAuthenticated } = identityStateTree;
+// const Navbar = inject("identityState", "auth")(
+//   observer(({ identityState, auth, classes }) => {
+//     const { name, state, isAuthenticated } = identityState;
 //     const { login, logout } = auth;
 
 //     return (
@@ -92,7 +92,7 @@ const LogInOut = props => {
 //   })
 // );
 
-const Navbar = inject("identityStateTree", "auth")(
+const Navbar = inject("identityState", "auth")(
   observer(
     class Navbar2 extends Component {
       state = {
@@ -109,7 +109,7 @@ const Navbar = inject("identityStateTree", "auth")(
       };
 
       render() {
-        const { name, state, isAuthenticated } = this.props.identityStateTree;
+        const { name, state, isAuthenticated } = this.props.identityState;
         const { login, logout } = this.props.auth;
         const { classes } = this.props;
 

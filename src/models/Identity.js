@@ -26,14 +26,33 @@ export const Identity = types
     },
     setSession(identity) {
       console.log(105, self.currentState);
-      
+
       if (!identity) {
         self.name = "Get Scatter";
         return;
       }
       self.name = identity.name;
 
-      self.currentState = toggleMachine.transition(self.currentState, "TOGGLE").value;
+      self.currentState = toggleMachine.transition(
+        self.currentState,
+        "TOGGLE"
+      ).value;
       console.log(201, self.currentState);
     }
-  }));
+  }))
+  .extend(self => {
+    let scatter = null;
+
+    return {
+      views: {
+        get scatter() {
+          return scatter;
+        }
+      },
+      actions: {
+        setScatter(value) {
+          scatter = value;
+        }
+      }
+    };
+  });

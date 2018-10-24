@@ -17,7 +17,7 @@ describe("Auth", () => {
     it("should handle rejected scatter connect() and setSession(null)", async () => {
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -41,7 +41,7 @@ describe("Auth", () => {
     it("should return false when connected but not authenticated (identity is null) and setSession(null)", async () => {
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession
         },
         scatter: {
@@ -64,7 +64,7 @@ describe("Auth", () => {
     it("should return the identity when connected to Scatter and already authenticated and setSession(identity)", async () => {
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -87,7 +87,7 @@ describe("Auth", () => {
     it("should return the identity when connected to Scatter and already authenticated and setSession(identity)", async () => {
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -114,7 +114,7 @@ describe("Auth", () => {
     it("should return connection_rejected ...", async () => {
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -139,7 +139,7 @@ describe("Auth", () => {
 
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -166,7 +166,7 @@ describe("Auth", () => {
 
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -192,7 +192,7 @@ describe("Auth", () => {
     it("should return connection_rejected and setSession(null)", async () => {
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -217,7 +217,7 @@ describe("Auth", () => {
 
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -242,7 +242,7 @@ describe("Auth", () => {
 
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
@@ -274,7 +274,7 @@ describe("Auth", () => {
 
       const options = {
         config,
-        identityStateTree: {
+        identityState: {
           setSession: mockSetSession,
           setState: mockSetState
         },
