@@ -1,6 +1,58 @@
 import { types } from "mobx-state-tree";
 import { Machine } from "xstate";
 
+// visualizer: https://musing-rosalind-2ce8e7.netlify.com/
+const stateChart = {
+  "initial": "idle",
+  "states": {
+    "idle": {
+      "on": {
+        "LOADING": "loading"
+      }
+    },
+    "loading": {
+      "on": {
+        "SUCCESS": "active",
+        "INACTIVE": "inactive",
+        "REJECTED": [
+          {
+            "target": "inactive.rejected"
+          }
+        ],
+        "ERROR": [
+          {
+            "target": "inactive.noConnection"
+          }
+        ]
+      }
+    },
+    "inactive": {
+      "on": {
+        "LOADING": "loading"
+      },
+      "states": {
+        "rejected": {
+          "data": {
+            "details": "Identity request rejected"
+          }
+        },
+        "noConnection": {
+          "data": {
+            "details": "Cannot connect to Scatter"
+          }
+        }
+      }
+    },
+    "active": {
+      "on": {
+        "FORGET_IDENTITY": "loading"
+      }
+    }
+  }
+}
+
+const identityMachine = Machine(stateChart)
+
 const toggleMachine = Machine({
   initial: "inactive",
   states: {
