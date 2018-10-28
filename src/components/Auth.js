@@ -10,7 +10,7 @@ const Auth = class Auth {
     this.scatter = options.scatter;
   }
 
-  states = {
+  events = {
     LOADING: "LOADING",
     SUCCESS: "SUCCESS",
     FORGET_IDENTITY: "FORGET_IDENTITY",
@@ -65,7 +65,7 @@ const Auth = class Auth {
         // tell the user we cannot connect to their wallet
         console.log("scatter.connect()", err);
         this.identityState.setSession(null);
-        this.identityState.stateTransition(this.states.ERROR);
+        this.identityState.stateTransition(this.events.ERROR);
         return {
           type: "connection_rejected",
           code: 500,
@@ -80,33 +80,33 @@ const Auth = class Auth {
    * Similar to a isLoggedIn() or isAuthenticated() method
    */
   identity() {
-    this.identityState.stateTransition(this.states.LOADING);
+    this.identityState.stateTransition(this.events.LOADING);
     return this.connect().then(res => {
       if (res.identity) {
         this.identityState.setSession(res.identity);
-        this.identityState.stateTransition(this.states.SUCCESS);
+        this.identityState.stateTransition(this.events.SUCCESS);
       } else if (res.isError) {
-        this.identityState.stateTransition(this.states.ERROR);
+        this.identityState.stateTransition(this.events.ERROR);
       } else {
-        this.identityState.stateTransition(this.states.INACTIVE);
+        this.identityState.stateTransition(this.events.INACTIVE);
       }
       return res;
     });
   }
 
   logout = () => {
-    this.identityState.stateTransition(this.states.FORGET_IDENTITY);
+    this.identityState.stateTransition(this.events.FORGET_IDENTITY);
     return this.connect().then(connected => {
       // update UI we cannot auto logout from this app without a connection to Scatter wallet
       if (connected.isError) {
-        this.identityState.stateTransition(this.states.ERROR);
+        this.identityState.stateTransition(this.events.ERROR);
         return connected;
       }
 
       if (this.scatter.identity) {
         this.scatter.forgetIdentity();
         this.identityState.setSession(null);
-        this.identityState.stateTransition(this.states.INACTIVE);
+        this.identityState.stateTransition(this.events.INACTIVE);
       }
 
       return {
@@ -119,17 +119,17 @@ const Auth = class Auth {
   };
 
   login = () => {
-    this.identityState.stateTransition(this.states.LOADING);
+    this.identityState.stateTransition(this.events.LOADING);
     // First we need to connect to the user's Scatter.
     return this.connect().then(connected => {
       if (connected.isError) {
-        this.identityState.stateTransition(this.states.ERROR);
+        this.identityState.stateTransition(this.events.ERROR);
         return connected;
       }
 
       // we can connect to Scatter and we have an identity already
       if (!connected.isError && connected.identity) {
-        this.identityState.stateTransition(this.states.SUCCESS);
+        this.identityState.stateTransition(this.events.SUCCESS);
         return { code: 200, message: "OK", identity: connected.identity };
       }
 
@@ -144,13 +144,13 @@ const Auth = class Auth {
         .getIdentity(requiredFields)
         .then(identity => {
           this.identityState.setSession(identity);
-          this.identityState.stateTransition(this.states.SUCCESS);
+          this.identityState.stateTransition(this.events.SUCCESS);
           return { code: 200, message: "OK", identity };
         })
         .catch(err => {
           // user rejected Scatter pop up identity request
           console.log(err);
-          this.identityState.stateTransition(this.states.REJECTED);
+          this.identityState.stateTransition(this.events.REJECTED);
           return err;
         });
     });
