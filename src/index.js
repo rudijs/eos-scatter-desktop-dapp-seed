@@ -9,19 +9,19 @@ import Auth from "./components/Auth";
 import config from "./config";
 import ScatterJS from "scatterjs-core";
 import ScatterEOS from "scatterjs-plugin-eosjs2";
-import { Identity } from "./models/Identity";
+import { Identity, identityMachine } from "./models/Identity";
 ScatterJS.plugins(new ScatterEOS());
 
 const identityState = Identity.create({
   name: "Get Scatter",
-  state: "initial"
+  currentState: identityMachine.initialState.value
 });
 
 // Keep one persistent reference to the ScatterJS object through-out your application's lifecycle.
 // The best practice is to keep a reference to ScatterJS within your state controller, like MobX, Redux etc.
 // Here we'll use volatile state in mobx-state-tree in such a way that the .scatter computed property
 // is not observable, no patch/diff, no getSnapshot
-identityState.setScatter(ScatterJS.scatter)
+identityState.setScatter(ScatterJS.scatter);
 
 const auth = new Auth({
   config,

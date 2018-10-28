@@ -1,14 +1,13 @@
 import Auth from "./Auth";
-import config from '../config'
+import config from "../config";
 
 let mockSetSession;
-let mockSetState;
+let mockStateTransition;
 
 describe("Auth", () => {
   beforeEach(() => {
-    // mockSetSession = jest.fn(() => true);
     mockSetSession = jest.fn(() => true);
-    mockSetState = jest.fn(() => true);
+    mockStateTransition = jest.fn(() => true);
   });
 
   const identity = { name: "Bob", publicKey: "EOS*********" };
@@ -19,7 +18,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -34,8 +33,8 @@ describe("Auth", () => {
       expect(connected.type).toEqual("connection_rejected");
       expect(mockSetSession.mock.calls.length).toBe(1);
       expect(mockSetSession).toBeCalledWith(null);
-      expect(mockSetState.mock.calls.length).toBe(1);
-      expect(mockSetState).toBeCalledWith("initial");
+      expect(mockStateTransition.mock.calls.length).toBe(1);
+      expect(mockStateTransition).toBeCalledWith("ERROR");
     });
 
     it("should return false when connected but not authenticated (identity is null) and setSession(null)", async () => {
@@ -66,7 +65,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -75,7 +74,7 @@ describe("Auth", () => {
         }
       };
       const auth = new Auth(options);
-      const id = await auth.identity()
+      const id = await auth.identity();
       expect(id.type).toEqual("connection_accepted");
       expect(id.code).toEqual(200);
       expect(id.isError).toBeFalsy();
@@ -89,7 +88,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -116,7 +115,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -141,7 +140,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -168,7 +167,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -194,7 +193,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -219,7 +218,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -244,7 +243,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {
@@ -276,7 +275,7 @@ describe("Auth", () => {
         config,
         identityState: {
           setSession: mockSetSession,
-          setState: mockSetState
+          stateTransition: mockStateTransition
         },
         scatter: {
           connect(appName) {

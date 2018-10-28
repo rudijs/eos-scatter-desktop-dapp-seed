@@ -109,9 +109,16 @@ const Navbar = inject("identityState", "auth")(
       };
 
       render() {
-        const { name, state, isAuthenticated } = this.props.identityState;
+        const {
+          name,
+          currentState,
+          isAuthenticated
+        } = this.props.identityState;
         const { login, logout } = this.props.auth;
         const { classes } = this.props;
+
+        console.log(101, currentState);
+        console.log(201, currentState.inactive);
 
         const sideList = (
           <div className={classes.list}>
@@ -164,11 +171,11 @@ const Navbar = inject("identityState", "auth")(
                   color="inherit"
                   className={classes.grow}
                 >
-                  EOS Dapp - {name} ({state})
+                  {/* EOS Dapp - {name} ({currentState}) */}
+                  EOS Dapp - {name}
                 </Typography>
 
                 <LogInOut
-                  state={state}
                   isAuthenticated={isAuthenticated}
                   login={login}
                   logout={logout}

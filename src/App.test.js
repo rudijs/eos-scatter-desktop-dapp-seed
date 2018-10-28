@@ -3,14 +3,14 @@ import ReactDOM from "react-dom";
 import App from "./App";
 
 import { Provider } from "mobx-react";
-import { Identity } from "./models/Identity";
+import { Identity, identityMachine } from "./models/Identity";
 import Auth from "./components/Auth";
 import config from "./config";
 
 // real mobx state tree
 const identityState = Identity.create({
   name: "Guest",
-  state: "initial"
+  currentState: identityMachine.initialState.value
 });
 
 // mock ScatterJS

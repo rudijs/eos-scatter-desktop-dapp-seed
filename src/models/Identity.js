@@ -3,69 +3,70 @@ import { Machine } from "xstate";
 
 // visualizer: https://musing-rosalind-2ce8e7.netlify.com/
 const stateChart = {
-  "initial": "idle",
-  "states": {
-    "idle": {
-      "on": {
-        "LOADING": "loading"
+  initial: "idle",
+  states: {
+    idle: {
+      on: {
+        LOADING: "loading"
       }
     },
-    "loading": {
-      "on": {
-        "SUCCESS": "active",
-        "INACTIVE": "inactive",
-        "REJECTED": [
+    loading: {
+      on: {
+        SUCCESS: "active",
+        INACTIVE: "inactive",
+        REJECTED: [
           {
-            "target": "inactive.rejected"
+            // target: "inactive.rejected"
+            target: "inactive"
           }
         ],
-        "ERROR": [
+        ERROR: [
           {
-            "target": "inactive.noConnection"
+            target: "inactive.noConnection"
+            // target: "inactive"
           }
         ]
       }
     },
-    "inactive": {
-      "on": {
-        "LOADING": "loading"
+    inactive: {
+      on: {
+        LOADING: "loading"
       },
-      "states": {
-        "rejected": {
-          "data": {
-            "details": "Identity request rejected"
+      states: {
+        rejected: {
+          data: {
+            details: "Identity request rejected"
           }
         },
-        "noConnection": {
-          "data": {
-            "details": "Cannot connect to Scatter"
+        noConnection: {
+          data: {
+            details: "Cannot connect to Scatter"
           }
         }
       }
     },
-    "active": {
-      "on": {
-        "FORGET_IDENTITY": "loading"
+    active: {
+      on: {
+        FORGET_IDENTITY: "loading"
       }
     }
   }
-}
+};
 
-const identityMachine = Machine(stateChart)
+export const identityMachine = Machine(stateChart);
 
-const toggleMachine = Machine({
-  initial: "inactive",
-  states: {
-    inactive: { on: { TOGGLE: "active" } },
-    active: { on: { TOGGLE: "inactive" } }
-  }
+// states
+const Tstates = types.enumeration(["idle", "loading", "active", "inactive"]);
+
+// nested states
+const TnestedStates = types.model({
+  inactive: types.string
 });
 
 export const Identity = types
   .model({
     name: types.string,
-    state: types.enumeration(["initial", "loading", "loaded", "error"]),
-    currentState: toggleMachine.initialState.value
+    currentState: types.union(Tstates, TnestedStates)
   })
   .views(self => ({
     get isAuthenticated() {
@@ -73,23 +74,18 @@ export const Identity = types
     }
   }))
   .actions(self => ({
-    setState(state) {
-      self.state = state;
+    stateTransition(state) {
+      self.currentState = identityMachine.transition(
+        self.currentState,
+        state
+      ).value;
     },
     setSession(identity) {
-      console.log(105, self.currentState);
-
       if (!identity) {
         self.name = "Get Scatter";
         return;
       }
       self.name = identity.name;
-
-      self.currentState = toggleMachine.transition(
-        self.currentState,
-        "TOGGLE"
-      ).value;
-      console.log(201, self.currentState);
     }
   }))
   .extend(self => {
