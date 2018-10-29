@@ -112,6 +112,7 @@ const Navbar = inject("identityState", "auth")(
         const {
           name,
           currentState,
+          currentStateDetails,
           isAuthenticated
         } = this.props.identityState;
         const { login, logout } = this.props.auth;
@@ -169,6 +170,7 @@ const Navbar = inject("identityState", "auth")(
                   className={classes.grow}
                 >
                   EOS Dapp - {name} ({currentState})
+                  {currentStateDetails ? " (" + currentStateDetails + ")" : ""}
                 </Typography>
 
                 <LogInOut

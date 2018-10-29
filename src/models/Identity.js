@@ -11,6 +11,9 @@ const stateChart = {
       }
     },
     loading: {
+      data: {
+        details: "Connecting to Scatter"
+      },
       on: {
         SUCCESS: "active",
         INACTIVE: "inactive",
