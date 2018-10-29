@@ -16,8 +16,8 @@ const stateChart = {
         INACTIVE: "inactive",
         REJECTED: [
           {
-            // target: "inactive.rejected"
-            target: "inactive"
+            target: "inactive.rejected"
+            // target: "inactive"
           }
         ],
         ERROR: [
@@ -54,19 +54,29 @@ const stateChart = {
 };
 
 export const identityMachine = Machine(stateChart);
+// console.log(identityMachine.events);
 
 // states
-const Tstates = types.enumeration(["idle", "loading", "active", "inactive"]);
+const Tstates = types.enumeration([
+  "idle",
+  "loading",
+  "active",
+  "inactive",
+  "inactive.noConnection",
+  "inactive.rejected"
+]);
 
 // nested states
-const TnestedStates = types.model({
-  inactive: types.string
-});
+// const TnestedStates = types.model({
+// inactive: types.string
+// });
 
 export const Identity = types
   .model({
     name: types.string,
-    currentState: types.union(Tstates, TnestedStates)
+    // currentState: types.union(Tstates, TnestedStates),
+    currentState: Tstates,
+    currentStateDetails: types.optional(types.string, "")
   })
   .views(self => ({
     get isAuthenticated() {
@@ -74,11 +84,29 @@ export const Identity = types
     }
   }))
   .actions(self => ({
-    stateTransition(state) {
-      self.currentState = identityMachine.transition(
-        self.currentState,
-        state
-      ).value;
+    stateTransition(event) {
+      const currentState = identityMachine.transition(self.currentState, event);
+      // console.log(101, JSON.stringify(currentState));
+
+      let currentStateValue = currentState.value;
+
+      // convert object notation for hierarchical states to dotted string type
+      // example:
+      // from: { inactive: 'noConnection' }
+      // to: 'inactive.noConnection'
+      if (typeof currentStateValue === "object") {
+        currentStateValue = Object.keys(currentStateValue).reduce(
+          (acc, curr) => {
+            return acc + curr + "." + currentStateValue[curr];
+          },
+          ""
+        );
+      }
+
+      self.currentState = currentStateValue;
+
+      // currentState details
+      self.currentStateDetails = stateDetails(currentStateValue, currentState);
     },
     setSession(identity) {
       if (!identity) {
@@ -104,3 +132,14 @@ export const Identity = types
       }
     };
   });
+
+function stateDetails(stateValue, state) {
+  const allData = Object.keys(state.data).reduce((acc, curr) => {
+    if (state.data[curr]) {
+      const key = curr.replace(/\(machine\)\./, "");
+      acc[key] = state.data[curr]["details"];
+    }
+    return acc;
+  }, {});
+  return allData[stateValue] || "";
+}

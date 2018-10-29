@@ -27,4 +27,13 @@ describe("Identity State Tree", () => {
     identity.setScatter({ a: "b" });
     expect(identity.scatter.a).toEqual("b");
   });
+
+  it("transitions state on events", () => {
+    expect(identity.currentState).toEqual("idle");
+    identity.stateTransition("LOADING");
+    expect(identity.currentState).toEqual("loading");
+    identity.stateTransition("ERROR");
+    // expect(identity.currentState).toEqual("");
+    console.log(identity.currentState);
+  });
 });
