@@ -90,26 +90,9 @@ export const Identity = types
     stateTransition(event) {
       const currentState = identityMachine.transition(self.currentState, event);
       // console.log(101, JSON.stringify(currentState));
-
-      let currentStateValue = currentState.value;
-
-      // convert object notation for hierarchical states to dotted string type
-      // example:
-      // from: { inactive: 'noConnection' }
-      // to: 'inactive.noConnection'
-      if (typeof currentStateValue === "object") {
-        currentStateValue = Object.keys(currentStateValue).reduce(
-          (acc, curr) => {
-            return acc + curr + "." + currentStateValue[curr];
-          },
-          ""
-        );
-      }
-
-      self.currentState = currentStateValue;
-
+      self.currentState = convertObjectToString(currentState.value);
       // currentState details
-      self.currentStateDetails = stateDetails(currentStateValue, currentState);
+      self.currentStateDetails = stateDetails(self.currentState, currentState);
     },
     setSession(identity) {
       if (!identity) {
@@ -135,6 +118,18 @@ export const Identity = types
       }
     };
   });
+
+// convert object notation for hierarchical states to dotted string type
+// example:
+// from: { inactive: 'noConnection' }
+// to: 'inactive.noConnection'
+function convertObjectToString(currentStateValue) {
+  if (typeof currentStateValue === "string") return currentStateValue;
+
+  return Object.keys(currentStateValue).reduce((acc, curr) => {
+    return acc + curr + "." + currentStateValue[curr];
+  }, "");
+}
 
 function stateDetails(stateValue, state) {
   const allData = Object.keys(state.data).reduce((acc, curr) => {
