@@ -21,9 +21,32 @@ This is a sample developer starter project to:
 
 ## Documentation
 
+## Step 1
+
 We'll begin by creating a local EOSIO blockchain.
 
 Steps 1 and 2 below are extracted verbatim from the EOSIO documentation at [https://developers.eos.io/eosio-home/docs](https://developers.eos.io/eosio-home/docs)
 
 1. [Create Local Development EOS Blockchain](docs/create_blockchain.md)
 2. [Hello World Smart Contract](docs/hello_world.md)
+
+## Step 2
+
+With a running local EOSIO blockchain and deployed hello world smart contract, next we'll configure Scatter Destkop:
+
+1. Install [Scatter Desktop](https://github.com/GetScatter/ScatterDesktop/releases)
+2. Get the _chain_id_ from the JSON output from this URL [http://localhost:7777/v1/chain/get_info](http://localhost:7777/v1/chain/get_info)
+3. Scatter -> Settings -> Networks: Then add a new **localhost** network like so:
+
+![scatter1.png](docs/images/scatter1.png)
+
+4. Next add your private key from your localhost accounts (bob and alice), run this command:
+5. `cleos wallet private_keys`
+6. Scatter -> Vault -> New -> Name: 'localhost' -> Import -> Text of QR -> Enter a Private Key ...
+7. Scatter should scan and detect your locahost EOSIO account, like so:
+
+![scatter2.png](docs/images/scatter2.png)
+
+## Step 3
+
+Now with a local EOSIO blockchian running, Scatter destop configured, we can fire up our DAPP and _sign in_
