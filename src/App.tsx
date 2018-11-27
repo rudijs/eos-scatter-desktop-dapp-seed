@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Router, Route, Switch } from "react-router-dom";
-import history from './history'
-import PropTypes from "prop-types";
 import "./App.css";
+
+import { Router, Route, Switch } from "react-router-dom";
+import history from "./history";
+import PropTypes from "prop-types";
 
 import "typeface-roboto";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,8 +14,14 @@ import Navbar from "./components/layout/Navbar";
 import Home from "./components/Home";
 import About from "./components/About";
 
+interface IAuth {
+  identity(): void;
+}
+interface AppProps {
+  auth: IAuth;
+}
 
-class App extends Component {
+class App extends Component<AppProps> {
   componentDidMount() {
     // When the app loads, make a call to Scatter and see if we already have an identity authorized
     // If we do, globally available identityState will be updated.
@@ -40,9 +47,5 @@ class App extends Component {
     );
   }
 }
-
-App.propTypes = {
-  auth: PropTypes.object.isRequired
-};
 
 export default App;

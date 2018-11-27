@@ -14,7 +14,8 @@ ScatterJS.plugins(new ScatterEOS());
 
 const identityState = Identity.create({
   name: "Get Scatter",
-  currentState: identityMachine.initialState.value
+  // currentState: identityMachine.initialState.value
+  currentState: "idle"
 });
 
 // Keep one persistent reference to the ScatterJS object through-out your application's lifecycle.
@@ -38,5 +39,5 @@ ReactDOM.render(
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about ser}vice workers: http://bit.ly/CRA-PWA
+// Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();

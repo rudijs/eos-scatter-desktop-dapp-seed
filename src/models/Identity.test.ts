@@ -1,7 +1,7 @@
-import { Identity } from "./Identity";
+import { Identity, IdentityInterface } from "./Identity";
 
 describe("Identity State Tree", () => {
-  let identity;
+  let identity: IdentityInterface;
 
   beforeEach(() => {
     identity = Identity.create({
@@ -33,7 +33,6 @@ describe("Identity State Tree", () => {
     identity.stateTransition("LOADING");
     expect(identity.currentState).toEqual("loading");
     identity.stateTransition("ERROR");
-    // expect(identity.currentState).toEqual("");
-    console.log(identity.currentState);
+    expect(identity.currentState).toEqual("inactive.noConnection");
   });
 });

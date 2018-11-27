@@ -1,5 +1,5 @@
 import { types } from "mobx-state-tree";
-import { Machine } from "xstate";
+import { Machine, StateValueMap } from "xstate";
 
 // visualizer: https://musing-rosalind-2ce8e7.netlify.com/
 const stateChart = {
@@ -11,39 +11,35 @@ const stateChart = {
       }
     },
     loading: {
-      data: {
+      meta: {
         details: "Connecting to Scatter"
       },
       on: {
         SUCCESS: "active",
-        INACTIVE: "inactive",
-        REJECTED: [
-          {
-            target: "inactive.rejected"
-            // target: "inactive"
-          }
-        ],
-        ERROR: [
-          {
-            target: "inactive.noConnection"
-            // target: "inactive"
-          }
-        ]
+        INACTIVE: [{ target: "inactive.connected" }],
+        REJECTED: [{ target: "inactive.rejected" }],
+        ERROR: [{ target: "inactive.noConnection" }]
       }
     },
     inactive: {
+      initial: "noConnection",
       on: {
         LOADING: "loading"
       },
       states: {
         rejected: {
-          data: {
+          meta: {
             details: "Identity request rejected"
           }
         },
         noConnection: {
-          data: {
+          meta: {
             details: "Cannot connect to Scatter"
+          }
+        },
+        connected: {
+          meta: {
+            details: "Can connect to Scatter"
           }
         }
       }
@@ -58,13 +54,29 @@ const stateChart = {
 
 export const identityMachine = Machine(stateChart);
 // console.log(identityMachine.events);
+// enum StateValue {
+//   Idle = "idle",
+//   Loading = "loading",
+//   Active = "active",
+//   Inactive = "inactive",
+//   InactiveNoConnection = "inactive.noConnection",
+//   InactiveRejected = "inactive.rejected"
+// }
 
 // states
-const Tstates = types.enumeration([
+// const Tstates = types.enumeration<StateValue>([
+//   StateValue.Idle,
+//   StateValue.Loading,
+//   StateValue.Active,
+//   StateValue.Inactive,
+//   StateValue.InactiveNoConnection,
+//   StateValue.InactiveRejected
+// ]);
+const Tstates = types.enumeration<string>([
   "idle",
   "loading",
   "active",
-  "inactive",
+  "inactive.connected",
   "inactive.noConnection",
   "inactive.rejected"
 ]);
@@ -74,7 +86,19 @@ const Tstates = types.enumeration([
 // inactive: types.string
 // });
 
-export const Identity = types
+// interface for the test.ts file
+export interface IdentityInterface {
+  name: string;
+  currentState: string;
+  isAuthenticated: boolean;
+  setSession(identity: any): void;
+  scatter: null | any;
+  setScatter(value: any): void;
+  stateTransition(event: string): void;
+}
+
+// export const Identity = types
+export const Identity: any = types
   .model({
     name: types.string,
     // currentState: types.union(Tstates, TnestedStates),
@@ -87,14 +111,15 @@ export const Identity = types
     }
   }))
   .actions(self => ({
-    stateTransition(event) {
+    stateTransition(event: string) {
+      console.log(101, self.currentState, event);
       const currentState = identityMachine.transition(self.currentState, event);
       // console.log(101, JSON.stringify(currentState));
       self.currentState = convertObjectToString(currentState.value);
       // currentState details
       self.currentStateDetails = stateDetails(self.currentState, currentState);
     },
-    setSession(identity) {
+    setSession(identity: any) {
       if (!identity) {
         self.name = "Get Scatter";
         return;
@@ -103,7 +128,7 @@ export const Identity = types
     }
   }))
   .extend(self => {
-    let scatter = null;
+    let scatter: any = null;
 
     return {
       views: {
@@ -112,7 +137,7 @@ export const Identity = types
         }
       },
       actions: {
-        setScatter(value) {
+        setScatter(value: any) {
           scatter = value;
         }
       }
@@ -123,7 +148,7 @@ export const Identity = types
 // example:
 // from: { inactive: 'noConnection' }
 // to: 'inactive.noConnection'
-function convertObjectToString(currentStateValue) {
+function convertObjectToString(currentStateValue: string | StateValueMap) {
   if (typeof currentStateValue === "string") return currentStateValue;
 
   return Object.keys(currentStateValue).reduce((acc, curr) => {
@@ -131,13 +156,20 @@ function convertObjectToString(currentStateValue) {
   }, "");
 }
 
-function stateDetails(stateValue, state) {
-  const allData = Object.keys(state.data).reduce((acc, curr) => {
-    if (state.data[curr]) {
-      const key = curr.replace(/\(machine\)\./, "");
-      acc[key] = state.data[curr]["details"];
-    }
-    return acc;
-  }, {});
+interface IStateDetails {
+  [key: string]: string;
+}
+
+function stateDetails(stateValue: string, state: any) {
+  const allData: IStateDetails = Object.keys(state.meta).reduce(
+    (acc: IStateDetails, curr) => {
+      if (state.meta[curr]) {
+        const key = curr.replace(/\(machine\)\./, "");
+        acc[key] = state.meta[curr]["details"];
+      }
+      return acc;
+    },
+    {}
+  );
   return allData[stateValue] || "";
 }
