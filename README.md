@@ -50,3 +50,27 @@ With a running local EOSIO blockchain and deployed hello world smart contract, n
 ## Step 3
 
 Now with a local EOSIO blockchian running, Scatter destop configured, we can fire up our DAPP and _sign in_
+
+- `cd ~/p/eos-scatter-desktop-dapp-seed`
+- `npm install`
+- `npm start`
+
+## Start - not authenticated
+
+![dapp1](docs/images/dapp1.png)
+
+## Sign in
+
+![dapp2](docs/images/dapp2.png)
+
+## Choose Account
+
+![dapp3](docs/images/dapp3.png)
+
+## Authenticated - Logout
+
+![dapp4](docs/images/dapp4.png)
+
+## Scatter UI - Logout
+
+![dapp5](docs/images/dapp5.png)
